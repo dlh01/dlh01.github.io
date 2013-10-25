@@ -1,0 +1,17 @@
+/*------------------------------------*\
+    $PANEL
+\*------------------------------------*/
+
+.panel{
+		border:1px solid $base-ui-color;
+		background-color:#f2f2f2;
+		margin-bottom:$base-spacing-unit;
+		margin-bottom:($base-spacing-unit / $base-font-size)*1rem;
+		padding:$base-spacing-unit;
+		padding:($base-spacing-unit / $base-font-size)*1rem;
+
+		ul,ol,dd {
+				margin-left:$base-font-size;
+				margin-left:1rem;
+		}
+}

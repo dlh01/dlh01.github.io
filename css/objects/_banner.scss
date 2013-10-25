@@ -1,0 +1,36 @@
+/*------------------------------------*\
+    $BANNER
+\*------------------------------------*/
+/**
+ * Create a big banner for the site
+ *
+  <header role="banner">
+      <h1 class="banner__heading"><a class="banner__link" href="/">...</a></h1>
+  </header>
+ */
+
+[role=banner]{
+
+	margin-top:$half-spacing-unit;
+	border-bottom:1px solid $base-ui-color;
+	margin-bottom:$base-spacing-unit;
+	margin-bottom:($base-spacing-unit / $base-font-size)*1rem;
+
+
+		.banner__heading{
+			@include font-size($kilo-size);
+		}
+
+		.banner__link{
+				color:#000;
+				text-decoration:none;
+
+				&:hover {
+						color:$brand-color;
+				}
+		}
+
+		@media screen and (min-height:$lap-start) {
+			margin-top:$base-spacing-unit;
+		}
+}
