@@ -1,3 +1,4 @@
 name: David Herrera
 markdown: redcarpet
 pygments: true
+exclude: [dlh01.info.sublime-project, dlh01.info.sublime-workspace, Gemfile, Gemfile.lock, README.md]
