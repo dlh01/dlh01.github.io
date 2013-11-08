@@ -30,7 +30,7 @@
 # Notes
 
 * The included Modernizr is a custom build, not the HTML5 Boilerplate default build
-
+* An encoded version of the contact email address is in `_includes/email_address.html`
 
 # References
 
