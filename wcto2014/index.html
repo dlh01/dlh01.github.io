@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Writing Cleaner, Sturdier Code With Unit Testing</title>
+
+		<meta name="description" content="Writing Cleaner, Sturdier Code With Unit Testing">
+		<meta name="author" content="David Herrera">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/solarized.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/github.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<style type="text/css">
+			h1 code,
+			h2 code,
+			h3 code,
+			h4 code,
+			h5 code,
+			h6 code {
+			}
+		</style>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<main role="main" class="slides">
+				<section>
+					<h1>Writing Cleaner, Sturdier Code With Unit Testing</h1>
+					<footer>
+						<p>David Herrera</p>
+						<p><a href="http://alleyinteractive.com" rel="external">alleyinteractive.com</a></p>
+						<p><a href="http://twitter.com/dlh01" rel="author external">@dlh01</a></p>
+					</footer>
+				</section>
+
+				<section>
+					<h2>Outline</h2>
+					<ol>
+						<li>Unit testing overview</li>
+						<li>Examining a unit test</li>
+						<li>Testing our own code</li>
+						<li>Unit testing in WordPress</li>
+					</ol>
+				</section>
+
+				<section>
+					<h2>What is unit testing?</h2>
+					<ul>
+						<li class="fragment">Units = small parts</li>
+						<li class="fragment">Meeting expectations</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Unit tests in WordPress core</h2>
+					<ul>
+						<li class="fragment">Reject an <code>update_option()</code> with an illegal key</li>
+						<li class="fragment">Set the correct status to future posts</li>
+						<li class="fragment">Clear the usermeta cache after a user is deleted</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>What is PHPUnit?</h2>
+					<p class="fragment"><small>See also: QUnit</small></p>
+				</section>
+
+				<section>
+					<h2>Getting to <code>phpunit</code></h2>
+					<p>Next: "Setting up Vagrant for Unit Testing" with Paul Bearne</p>
+				</section>
+
+				<section>
+					<h2>Create a plugin with unit tests</h2> <pre class="fragment"><code class="bash" data-trim>$ wp scaffold plugin my-plugin
+</code></pre>
+					<pre class="fragment"><code class="bash" data-trim>$ ls my-plugin
+> bin  my-plugin.php  phpunit.xml  readme.txt  tests
+</code></pre>
+				</section>
+
+				<section>
+					<h3>Add unit test files to an existing plugin</h3>
+					<pre><code class="bash" data-trim>$ wp scaffold unit-tests my-existing-plugin
+</code></pre>
+				</section>
+
+				<section>
+					<h2>Run the default test</h2>
+					<pre class="fragment"><code class="bash" data-trim>$ cd my-plugin/
+$ phpunit
+</code></pre>
+				</section>
+
+				<section>
+					<h4>Default test output</h4>
+					<figure><img src="./img/1.png" alt="Output of phpunit after the default test"></figure>
+				</section>
+
+				<section>
+					<h2>What was the test?</h2>
+					<pre><code data-trim>&lt;?php
+// tests/test-sample.php
+class SampleTest extends WP_UnitTestCase {
+	function testSample() {
+		// replace this with some actual testing code
+		$this->assertTrue( true );
+	}
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h2>The default test</h2>
+					<pre><code data-trim>&lt;?php
+// tests/test-sample.php
+function testSample() {
+	// replace this with some actual testing code
+	$this->assertTrue( true );
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h2>The default test (amended)</h2>
+					<pre><code data-trim>&lt;?php
+// tests/test-sample.php
+function testSample() {
+	$foo = true;
+	$this->assertTrue( $foo );
+}
+</code></pre>
+				</section>
+
+				<section> <h2>Assertions</h2>
+					<pre class="fragment"><code data-trim>assertFalse()
+</code></pre>
+					<pre class="fragment"><code data-trim>assertEquals()
+</code></pre>
+					<pre class="fragment"><code data-trim>assertInternalType()
+</code></pre>
+					<div class="fragment">
+						<pre><code data-trim>assertArrayHasKey()
+assertCount()
+assertEmpty()
+assertFileExists()
+assertGreaterThan()
+assertLessThan()
+assertObjectHasAttribute()
+</code></pre>
+						<p>And many more: <a href="https://phpunit.de/manual" rel="external">phpunit.de/manual</a></p>
+					</div>
+				</section>
+
+				<section>
+					<h2>Multiple tests</h2>
+					<pre><code data-trim>&lt;?php
+class SampleTest extends WP_UnitTestCase {
+
+	function test_is_true() {
+		$foo = true;
+		$this->assertTrue( $foo );
+	}
+
+	function test_is_null() {
+		$foo = null;
+		$this->assertNull( $foo );
+	}
+
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h4>Multiple tests output</h4>
+					<figure><img src="./img/2.png" alt="Output of phpunit after running multiple tests"></figure>
+				</section>
+
+				<section>
+					<h2>Failed tests</h2>
+					<pre class="fragment"><code data-trim>&lt;?php
+class SampleTest extends WP_UnitTestCase {
+
+	function test_is_true() { /* ... */ }
+
+	function test_is_null() { /* ... */ }
+
+	function test_names() {
+		$name = 'Wordpress';
+		$this->assertEquals( 'WordPress', $name );
+	}
+
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h4>Failed test output</h4>
+					<figure><img src="./img/3.png" alt="Output of phpunit after running a failed test"></figure>
+				</section>
+				<section>
+					<h2>Testing our code</h2>
+					<pre class="fragment"><code data-trim>&lt;?php
+// my-plugin.php
+function say_hello( $name ) {
+	return sprintf( __( 'Hello %s!', 'my-plugin' ), $name );
+}
+</code></pre>
+
+					<pre class="fragment"><code data-trim>&lt;?php
+// tests/test-sample.php
+function test_say_hello() {
+	$expected = 'Hello, David!';
+	$actual = say_hello( 'David' );
+	$this->assertEquals( $expected, $actual );
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h4>Custom code output</h4>
+					<figure><img src="./img/4.png" alt="Output of phpunit after running a failed test with custom code"></figure>
+				</section>
+
+				<section>
+					<h3>(Fixing the mistake)</h3>
+					<pre><code class="diff" data-trim>&lt;?php
+// my-plugin.php
+function say_hello( $name ) {
+-	return sprintf( __( 'Hello %s!', 'my-plugin' ), $name );
++	return sprintf( __( 'Hello, %s!', 'my-plugin' ), $name );
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h2>Rock paper scissors</h2>
+					<pre class="fragment"><code data-trim>&lt;?php
+function rock_wins( $opponent ) {
+	if ( 'scissors' == strtolower( $opponent ) ) {
+		return true;
+	} else {
+		return false;
+	}
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h3>Rock paper scissors</h3>
+					<pre><code data-trim>&lt;?php
+class Test_RPS extends WP_UnitTestCase {
+
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h3>Rock paper scissors</h3>
+					<pre><code data-trim>&lt;?php
+class Test_RPS extends WP_UnitTestCase {
+	function test_against_scissors() {
+		$actual = rock_wins( 'scissors' );
+		$this->assertTrue( $actual );
+	}
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h3>Rock paper scissors</h3>
+					<pre><code data-trim>&lt;?php
+class Test_RPS extends WP_UnitTestCase {
+	function test_against_scissors() {
+		$actual = rock_wins( 'scissors' );
+		$this->assertTrue( $actual );
+	}
+
+	function test_against_paper() {
+		$actual = rock_wins( 'paper' );
+		$this->assertFalse( $actual );
+	}
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h3>Rock paper scissors</h3>
+					<pre><code data-trim>&lt;?php
+class Test_RPS extends WP_UnitTestCase {
+	function test_against_scissors() {
+		$actual = rock_wins( 'scissors' );
+		$this->assertTrue( $actual );
+	}
+
+	function test_against_paper() {
+		$actual = rock_wins( 'paper' );
+		$this->assertFalse( $actual );
+	}
+
+	function test_against_banana() {
+		$actual = rock_wins( 'banana' );
+		$this->assertTrue( $actual );
+	}
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h4>RPS output</h4>
+					<figure><img src="./img/5.png" alt="Output of phpunit after a failed rock-paper-scissors test"></figure>
+				</section>
+
+				<section>
+					<h2>Rock paper scissors (fixed)</h2>
+					<pre><code data-trim>&lt;?php
+function rock_wins( $opponent ) {
+	$valid = array( 'rock', 'paper', 'scissors' );
+	$opponent = strtolower( $opponent );
+	if ( ! in_array( $opponent, $valid ) ) {
+		return true;
+	}
+
+	return 'scissors' == $opponent;
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h4>RPS output</h4>
+					<figure><img src="./img/6.png" alt="Output of phpunit after successful rock-paper-scissors tests"></figure>
+				</section>
+
+				<section>
+					<h2>Maintainable code</h2>
+					<pre><code data-trim>&lt;?php
+function rock_wins( $opponent ) {
+	if ( ! is_legal_throw( $opponent ) ) {
+		return true;
+	}
+
+	// ...
+}
+
+function is_legal_throw( $opponent ) {
+	// ...
+}
+
+</code></pre>
+				</section>
+
+				<section>
+					<h2>Separate tests</h2>
+					<pre><code data-trim>&lt;?php
+function test_is_legal_throw() {
+	$actual = is_legal_throw( 'scissors' );
+	$this->assertTrue( $actual );
+
+	$actual = is_legal_throw( 'rock' );
+	$this->assertTrue( $actual );
+
+	$actual = is_legal_throw( 'banana' );
+	$this->assertFalse( $actual );
+
+	$actual = is_legal_throw( array( 'rock', 'paper', 'scissors' ) );
+	$this->assertFalse( $actual );
+	// ...
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h2>Core tests</h2>
+					<pre class="fragment"><code class="php" data-trim>function test_bad_option_names() {
+	foreach ( array( '', '0', ' ', 0, false, null ) as $empty ) {
+		$this->assertFalse( get_option( $empty ) );
+		$this->assertFalse( add_option( $empty, '' ) );
+		$this->assertFalse( update_option( $empty, '' ) );
+		$this->assertFalse( delete_option( $empty ) );
+	}
+}
+</code></pre>
+
+					<pre class="fragment"><code class="php" data-trim>function test_returns_false_if_given_an_invalid_email_address() {
+	$data = array(
+		"khaaaaaaaaaaaaaaan!",
+		'http://bob.example.com/',
+		"sif i'd give u it, spamer!1",
+		"com.exampleNOSPAMbob",
+		"bob@your mom"
+		);
+	foreach ($data as $datum) {
+		$this->assertFalse(is_email($datum), $datum);
+	}
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h2><code>WP_UnitTestCase</code></h2>
+				</section>
+
+				<section>
+					<h3><code>go_to()</code></h3>
+					<pre><code data-trim>function test_demonstrations() {
+	$link = get_post_type_archive_link( 'my-post-type' );
+	$this->go_to( $link );
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h3><code>assertWPError()</code></h3>
+					<pre><code data-trim>function test_demonstrations() {
+	$response = wp_update_post( array( 'ID' => 'oops' ), true );
+	$this->assertWPError( $response );
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h3><code>factory->post</code></h3>
+					<pre><code data-trim>function test_demonstrations() {
+	$post_ID_A = $this->factory->post->create();
+
+	$post_ID_B = $this->factory->post->create( array(
+		'post_title' => 'Hello, Toronto!',
+		'post_date'  => '2014-11-16 09:30:00',
+	) );
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h3><code>factory->term</code></h3>
+					<pre><code data-trim>function test_demonstrations() {
+	$term_ID_A = $this->factory->term->create();
+
+	$term_ID_B = $this->factory->term->create( array(
+		'name'     => 'Term B',
+		'taxonomy' => 'category',
+	) );
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h3><code>factory->user</code></h3>
+					<pre><code data-trim>function test_demonstrations() {
+	$user_ID_A = $this->factory->user->create();
+
+	$user_ID_B = $this->factory->user->create( array(
+		'role'         => 'subscriber',
+		'display_name' => 'Aldo Leopold'
+	) );
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h3><code>get_echo()</code></h3>
+					<pre><code data-trim>function test_demonstrations() {
+	$haystack = get_echo( 'the_content' );
+	$this->assertContains( 'needle', $haystack );
+}
+</code></pre>
+				</section>
+
+				<section>
+					<h2>More resources</h2>
+					<ul>
+						<li><a href="http://wordpress.tv/2014/09/08/curtis-mchale-getting-started-with-unit-tests/">Curtis McHale: Getting Started With Unit Tests</a></li>
+						<li><a href="https://pippinsplugins.com/series/unit-tests-wordpress-plugins/">Pippin Williamson: Unit Tests for WordPress Plugins</a></li>
+						<li><a href="http://wordpress.tv/2014/06/12/eric-mann-12-needs-unit-tests/">Eric Mann: {12} Needs Unit Tests</a></li>
+						<li><a href="http://wpsessions.com/sessions/wordpress-unit-testing/">WPSessions: WordPress Unit Testing</a></li>
+					</ul>
+					<aside><small><a href="https://github.com/dlh01/raleigh2013/blob/master/links.md">Even more at GitHub</a></small></aside>
+				</section>
+
+				<section>
+					<h1>Thank you</h1>
+				</section>
+
+			</main>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'none', // default/cube/page/concave/zoom/linear/fade/none
+				// transitionSpeed: 'fast',
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					// { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					// { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					// { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					// { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
