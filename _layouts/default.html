@@ -1,10 +1,17 @@
-{% include header.html %}
+<!DOCTYPE html>
+<html>
 
-<main role="main">
-    <h1>{{ page.title }}</h1>
-    <div class="block-sections panel">
-		    {{ content }}
-	  </div>
-</main>
+	{% include head.html %}
 
-{% include footer.html %}
+	<body>
+
+		{% include header.html %}
+
+		<main>
+			<h1>{{ page.title }}</h1>
+			{{ content }}
+		</main>
+
+	</body>
+
+</html>

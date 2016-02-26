@@ -1,0 +1,32 @@
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>{{ site.title }}{% if page.title %} - {{ page.title }}{% endif %}</title>
+	<meta name="description" content="{{ site.description }}">
+
+	<link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
+
+	<!-- http://www.modularscale.com/?17.835&px&1.618&web&table -->
+	<style>
+		body {
+			color: #222;
+			font-family: sans-serif;
+			font-size: 17.835px;
+			line-height: 28.857px;
+			margin: 11.04px;
+		}
+
+		header {
+			margin-bottom: 46.691px;
+		}
+
+		@media (min-width: 837.736px) {
+			body {
+				margin: 0 auto;
+				max-width: 837.736px;
+			}
+		}
+	</style>
+</head>
