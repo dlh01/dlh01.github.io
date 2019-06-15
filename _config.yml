@@ -10,7 +10,7 @@ title: David Herrera
 email: mail@dlh01.info
 description: Software developer at Alley Interactive.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://www.dlh01.info" # the base hostname & protocol for your site
+url: "https://www.dlh01.info" # the base hostname & protocol for your site
 
 # Build settings
 markdown: kramdown
